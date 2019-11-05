@@ -29,15 +29,17 @@ xhttp.onreadystatechange = function() {
                 element = parent_tag;
 
             }else{
-                //console.log(element);
+                
                 field_name = xmlDoc.querySelector(element).tagName;
+                tbl_obj[field_name] = GetFieldValues(element,xmlDoc);
+                //console.log(field_name);
             }
             
-
-            tbl_obj[field_name] = GetFieldValues(element,xmlDoc);
+            //console.log(field_name);
+            
         });
     }    
-   
+    //console.log(tbl_obj);
     if(IsNotUndefined(path_att_list)){
         //console.log(path_att_list);
         path_att_list.forEach(element => {
@@ -64,7 +66,9 @@ xhttp.onreadystatechange = function() {
         tbl_obj[field_name] = Array.from(xmlDoc.querySelector(tag_path).children).map(x => x.innerHTML);
     });
 
-     console.log(tbl_obj);
+    //console.log(tbl_obj);
+    CleanObject(tbl_obj);
+    console.log(tbl_obj);
      console.log("done!");
     }
 };
@@ -222,23 +226,22 @@ function GetFieldValues(path,xmlDoc){
     for(i = 0; i <= arr_tags.length; i++){
         
         if(IsNotUndefined(arr_tags[i])){
-           
+            //console.log(arr_tags[i].tagName + "="  + parent_tag_name + "=" + has_no_children);
             if(arr_tags[i].tagName == parent_tag_name && has_no_children){
-               
-                let children = Array.from(arr_tags[i].children).map(x => x.tagName);
                 
+                let children = Array.from(arr_tags[i].children).map(x => x.tagName);
                 if(children.indexOf(tag_name) >= 0){
-                    
                     field_values.push(tags[i].getElementsByTagName(tag_name)[0].innerHTML);
-
+                    //console.log(tags[i].getElementsByTagName(tag_name)[0].tagName + "=" + field_values);
                 }else{
-
+                    
                     field_values.push(null);
                 } 
             }
         }
         
-    }   
+    }
+       
     return field_values;
 }
 
@@ -338,16 +341,7 @@ function GetFieldAttributeValues(path,xmlDoc){
 
              // check if this tag has the specified attiribute:
             if(IsNotUndefined(arr_tags[i].getAttribute(tag_att))){
-                
-                let parent_has_array = arr_tags[i].getAttribute(tag_att).includes('Arrays'); 
-                if(parent_has_array){
-                   if(arr_tags[i].children.length > 0){
-                    //console.log(arr_tags[i].tagName + "-" + "Array");
-                    //console.log(Array.from(arr_tags[i].children).map(x => x.innerHTML));
-                    field_values[arr_tags[i].tagName + "-" + "Array"] = Array.from(arr_tags[i].children).map(x => x.innerHTML);
-                   } 
-                    
-                }
+                  
                 field_values.push(arr_tags[i].getAttribute(tag_att));
                         
                 }else{ // tag dosn't have specified attribute:
@@ -378,7 +372,21 @@ function IsNotNull(object){
     return !ans;
 }
 
+function CleanObject(obj){
+    
+    let keys = Object.keys(obj);
+    keys.forEach((item) => {
 
+        //console.log(obj[item][0]);
+        if(obj[item][0] == "" || 
+            typeof obj[item][0] == 'undefined' || 
+            (obj[item][0].includes('Arrays') && 
+            item.includes('xmlns:a'))){
+
+            delete obj[item];
+        }
+    });
+}
 
 
 //#endregion
