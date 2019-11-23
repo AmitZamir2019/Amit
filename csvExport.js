@@ -52,6 +52,13 @@ function CsvToObject(delimeter){
     return tbl_obj;
 }
 
+function HideCSV(){
+    
+    // locate the CSV inside the html page:
+    let csv = document.body.children[0].innerText;
+    document.body.children[0].style.visibility = 'hidden';
+    
+}
 function GetSortedIndexes(arr){
     /*  
     Description:
@@ -65,7 +72,6 @@ function GetSortedIndexes(arr){
 
     return indexes;
 }
-
 
 function SortObject(obj,key_for_sorting){
     /*  
@@ -97,7 +103,7 @@ function SortObject(obj,key_for_sorting){
     return new_obj
 }
 
-function tableFromObject(obj) {
+function TableFromObject(obj) {
 /*  
     Description:
         This function takes an Object,
@@ -144,7 +150,8 @@ function tableFromObject(obj) {
     }
     tbl.appendChild(tr_head);
     tbl.appendChild(tbdy);
-    return tbl;
+    tbl.setAttribute('id','my_table');
+    return tbl; 
 }
 
 function DesignTable(tbl){
@@ -153,3 +160,24 @@ function DesignTable(tbl){
     tbl.style.textAlign = "center"; 
     
 }
+
+
+function ObjectFromTable(tbl){
+    
+    let  rows = tbl.rows;
+    let arr_rows = Array.from(rows).map(x => x.cells[0]);
+    
+    console.log(arr_rows);
+    let obj = {};
+    return obj;
+}
+
+
+let obj = CsvToObject(',');
+HideCSV();
+let body = document.getElementsByTagName('body')[0];
+let tbl = TableFromObject(obj);
+DesignTable(tbl);
+body.insertBefore(tbl, body.childNodes[0]);
+let load_obj = ObjectFromTable(tbl);
+console.log(load_obj);
