@@ -51,3 +51,48 @@ function CsvToObject(delimeter){
     });
     return tbl_obj;
 }
+
+function GetSortedIndexes(arr){
+    /*  
+    Description:
+        This function takes Array,
+        Sorting it,
+        Returning the indexex of old array.
+    */
+    let arr_sorted = arr.slice().sort();
+    let indexes = arr_sorted.slice()
+        .map(x => arr.indexOf(x));
+
+    return indexes;
+}
+
+
+function SortObject(obj,key_for_sorting){
+    /*  
+    Description:
+        This function takes Object,
+        Sorting specified key of it,
+        Loading new Object with the same data.
+        Affects all keys to be sorted in that order.
+    */
+    
+    let indexes = GetSortedIndexes(field_to_sort);
+    let new_obj = {};
+    let keys = []; 
+    Object.keys(obj).forEach(element => {
+        new_obj[element] = [];
+    });
+    // Loop througth keys of old object:
+    Object.keys(obj).forEach(key => {
+    
+        // Loop througth array in specific key:
+        indexes.forEach(index => {
+            
+            // Load new object:
+            let data = obj[key][index];
+            new_obj[key].push(data);                
+        })
+        
+    })
+    return new_obj
+}
