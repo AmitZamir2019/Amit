@@ -96,3 +96,60 @@ function SortObject(obj,key_for_sorting){
     })
     return new_obj
 }
+
+function tableFromObject(obj) {
+/*  
+    Description:
+        This function takes an Object,
+        and convert it to HTML table
+*/
+
+    let tbl = document.createElement('table');
+    let tbdy = document.createElement('tbody');
+    let columns = Object.keys(obj).length;
+    let rows = obj[Object.keys(obj)[0]].length;
+    let tr_head = document.createElement('tr');
+    
+    // Set table Head:
+    Object.keys(obj).forEach(element =>{
+        
+        let th = document.createElement('th');
+        let data = element;
+        th.appendChild(document.createTextNode(data));
+        tr_head.appendChild(th);
+    
+    })
+    
+    // Loop througth rows:
+    for (let i = 0; i < rows; i++) {
+      let tr = document.createElement('tr');
+
+      // Loop througth columns:        
+      for (let j = 0; j <= columns; j++) {
+
+          let td = document.createElement('td');
+          let key = Object.keys(obj)[j];
+          let arr = obj[key];
+          if(typeof arr !== 'undefined'){
+            let data = arr[i];
+            td.appendChild(document.createTextNode(data));
+            let column_name = obj[Object.keys(obj)[j]];
+            td.setAttribute('class', column_name);
+            tr.appendChild(td)
+          }
+          
+        
+      }
+      tbdy.appendChild(tr);
+    }
+    tbl.appendChild(tr_head);
+    tbl.appendChild(tbdy);
+    return tbl;
+}
+
+function DesignTable(tbl){
+    tbl.style.width = '100%';
+    tbl.setAttribute('border', '1');
+    tbl.style.textAlign = "center"; 
+    
+}
